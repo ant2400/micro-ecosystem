@@ -1,0 +1,34 @@
+rabbitmq:
+  image: rabbitmq:3.6.5-management
+  ports:
+    - '8080:15672'
+
+api-gateway:
+  image: ant2400/micro-api-gateway
+  command: nodemon index.js
+  environment:
+    NODE_ENV: development
+    APP_PORT: 3000
+  links:
+    - rabbitmq
+  restart: always
+  ports:
+    - '3000:3000'
+
+service-one:
+  image: ant2400/micro-service-one
+  command: nodemon index.js
+  environment:
+    NODE_ENV: development
+  links:
+    - rabbitmq
+  restart: always
+
+service-two:
+  image: ant2400/micro-service-two
+  command: nodemon index.js
+  environment:
+    NODE_ENV: development
+  links:
+    - rabbitmq
+  restart: always
